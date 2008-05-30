@@ -2,6 +2,6 @@
 
 = Таблица ответов =
 
-|| Programming-10 || [http://ifmo-bachelor-year-2004.googlecode.com/files/Programming-10.doc Комбинаторная теория сложности. Временная и емкостная сложность. Сложностные классы P, NP, PS. Сведение, NP-полные задачи.] ||
+|| Programming-10 || Гниломёдов Иван || [http://ifmo-bachelor-year-2004.googlecode.com/files/Programming-10.doc Комбинаторная теория сложности. Временная и емкостная сложность. Сложностные классы P, NP, PS. Сведение, NP-полные задачи.] ||
 
 Add your content here.
