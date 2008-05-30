@@ -1,0 +1,5 @@
+#summary One-sentence summary of this page.
+
+= Таблица ответов. =
+
+|| [http://ifmo-bachelor-year-2004.googlecode.com/files/compl.doc Programming-10] || Комбинаторная теория сложности. Временная и емкостная сложность. Сложностные классы P, NP, PS. Сведение, NP-полные задачи. ||
