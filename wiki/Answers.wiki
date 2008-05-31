@@ -16,6 +16,6 @@
 || 18 || Кулев Владимир || [http://cdtgos.googlecode.com/svn/trunk/3.1/ticket_3.1.doc Файловые системы. Древовидные и сетевые ФС. Журналирующие ФС. Реализация ФС. Файловые системы FAT, NTFS, Ext*.] ||
 ||
 || 31 || Наумов Ратмир || 
-[http://ifmo-bachelor-year-2004.googlecode.com/files/ticket_3.31.pdf Автоматное программирование. Отличие от абстрактных автоматов. Связь с машиной Тьюринга.] ||
+[ http://ifmo-bachelor-year-2004.googlecode.com/files/ticket_3.31.pdf Автоматное программирование. Отличие от абстрактных автоматов. Связь с машиной Тьюринга.] ||
 
 Add your content here.
