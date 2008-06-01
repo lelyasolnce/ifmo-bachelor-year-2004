@@ -1,0 +1,177 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{ifpdf}
+
+\newcommand{\mys}{\textit}
+\newcommand{\half}{\ensuremath{\frac{1}{2}}}
+
+%%%% Changes quotation marks
+\DeclareRobustCommand{\flqq}{\textormath{\guillemotleft}{\mbox{\guillemotleft}}}
+\DeclareRobustCommand{\frqq}{\textormath{\guillemotright}{\mbox{\guillemotright}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\section*{Билет \No 2.8}
+{\em Разностные методы решения краевых задач для обыкновенных дифференциальных уравнений. Метод прогонки.}
+
+\section{Что такое разностные схемы}
+	Для написания разностной схемы, приближающей данное ДУ необходимо:
+	\begin{itemize}
+		\item Заменить область непрерывного изменения аргумента областью дискретного изменения (см. \ref{subsection:net}).
+		\item Заменить дифференциальный оператор некоторым разностным оператором (см. \ref{subsection:operator}).
+		\item Сформулировать разностный аналог для краевых условий и начальных данных.
+	\end{itemize}
+	После осуществления этих трёх пунктов приходим к алгебраической системе уравнений.
+
+	\subsection{Сетка.}\label{subsection:net}
+		Необходимо выбрать несколько точек в области определения и приближённое решение искать только в этих точках. 
+		Такое множество точек называется \mys{сеткой}. Отдельные точки называются \mys{узлами сетки}.
+		Функция, определённая в узлах сетки, называется \mys{сеточной функцией}.
+		
+	\subsection{Замена дифференциального оператора разностным аналогом.}\label{subsection:operator}
+		Пусть дан дифференциальный оператор $L$, действующий на функцию $v = v(x)$. 
+		Заменим входящие в $L$ производные разностными отношениями и получим разностное выражение $L_h v_h$,
+		являющееся линейной комбинацией значений сеточной функции $v_h$ на некотором множестве узлов сетки $M(x)$,
+		называемым \mys{разностным шаблоном}:
+		$$L_h v_h (x) = \sum_{i \in M(x)} A_h(x, i) v_h(i),$$
+		где $A_h(x, i)$~-- коэффициенты. $L_h v_h$ называется \mys{разностной аппроксимацией оператора} $L v$. 
+	
+		Например, пусть $Lv = \frac{dv}{dx}$. Для аппроксимации можно воспользоваться одним из выражений:
+		\begin{eqnarray}
+			L^{+}_h v = \frac{v(x + h) - v(x)}{h} \label{eq:right}\\
+			L^{-}_h v = \frac{v(x) - v(x - h)}{h} \label{eq:left}\\
+			L^{o}_h v = \frac{v(x + h) - v(x - h)}{2h} \label{eq:center}
+		\end{eqnarray}
+		Выражение \ref{eq:right} есть \mys{правая разностная производная}, \ref{eq:left}~-- \mys{левая разностная производная},
+		\ref{eq:center}~-- \mys{центральная разностная производная}.
+
+\section{Разностная схема для краевых задач для ОДУ}
+	Решим уравнение:
+	\begin{gather}
+		\frac{d}{dx} (p(x) \frac{dy}{dx}) + q(x)y = r(x)\label{eq:main}\\
+		x \in [a, b] \\
+		(\alpha_a \frac{dy}{dx} + \beta_a y) \vert_{x=a} = \gamma_a \label{eq:border:a} \\
+		(\alpha_b \frac{dy}{dx} + \beta_b y) \vert_{x=b} = \gamma_b \label{eq:border:b}
+	\end{gather}
+	Равенства \ref{eq:border:a} и \ref{eq:border:b}~-- краевые условия.
+
+	Сетка на отрезке $[a, b]$: $a = x_0, x_1, \dotsc, x_{n+1} = b$. Первую производную приблизим центральной разностью:
+	\begin{gather}
+		p(x) \frac{dy}{dx} \vert_{x_{i-\half}} = p(x_{i-\half}) \frac{y(x_i) - y(x_{i-1})}{\Delta x} 
+		                                             = p_{i-\half} \frac{y_i - y_{i-1}}{\Delta x} \\
+		p(x) \frac{dy}{dx} \vert_{x_{i+\half}} = p_{i+\half} \frac{y_{i+1} - y_i}{\Delta x}
+	\end{gather}
+	Тогда:
+	\begin{gather}
+		\frac{d}{dx} (p(x) \frac{dy}{dx}) \vert_{x_i} = 
+		\frac{1}{\Delta x} (p_{i+\half} \frac{y_{i+1} - y_i}{\Delta x} - p_{i-\half} \frac{y_i - y_{i-1}}{\Delta x}) = \\
+		= \frac{p_{i + \half}}{{\Delta x}^2} y_{i+1} + \frac{p_{i - \half}}{{\Delta x}^2} y_{i-1} - \frac{p_{i + \half} + p_{i - \half}}{{\Delta x}^2} y_{i}
+	\end{gather}
+	Подставим в исходную формулу \ref{eq:main}. Получим:
+	\begin{equation}\label{eq:abc}
+		\underbrace{\frac{p_{i - \half}}{{\Delta x}^2}}_{a_i} y_{i-1} + 
+		\underbrace{(q_i - \frac{p_{i + \half} + p_{i - \half}}{{\Delta x}^2})}_{b_i} y_{i} + 
+		\underbrace{\frac{p_{i + \half}}{{\Delta x}^2}}_{c_i} y_{i+1} = \underbrace{r_i}_{d_i}. 
+	\end{equation}
+	Получим систему уравнений вида:
+	\begin{equation}
+		a_i y_{i-1} + b_i y_{i} + c_i y_{i + 1} = d_i.
+	\end{equation}
+	Краевые условия перепишем так:
+	\begin{equation*}
+		\left\{
+			\begin{aligned}
+				\underbrace{(\alpha_a - \frac{\beta_a}{\Delta x})}_{b_0}y_0 + 
+				\underbrace{\frac{\beta_a}{\Delta x}}_{c_0}y_1 &= \underbrace{\gamma_a}_{d_0} \\
+			  - \underbrace{\frac{\beta_b}{\Delta x}}_{a_n}y_{n-1} + 
+				\underbrace{(\alpha_b + \frac{\beta_b}{\Delta x})}_{b_n}y_n  &= \underbrace{\gamma_b}_{d_n}
+			\end{aligned}
+		\right.
+	\end{equation*}
+	Таким образом, получим систему:
+	\begin{equation}
+		\begin{pmatrix}b_0    & c_0    & 0      & 0       & \ldots & 0\\
+					   a_1    & b_1    & c_1    & 0       & \ldots & 0 \\
+					   0      & a_2    & b_2    & c_2     & \ldots & 0\\
+					   \vdots & \vdots & \ddots & \ddots  & \ddots & \vdots\\
+					   0	  & \ldots &        & a_{n-1} & b_{n-1} & c_{n-1}\\
+					   0      & \ldots &        & 0        & a_n     & b_n
+		\end{pmatrix}
+		\begin{pmatrix}
+			y_0\\
+			y_1\\
+			y_2\\
+			\vdots\\
+			y_{n-1}\\
+			y_n
+		\end{pmatrix} = 
+		\begin{pmatrix}
+			d_0\\
+			d_1\\
+			d_2\\
+			\vdots\\
+			d_{n-1}\\
+			d_n
+		\end{pmatrix}
+	\end{equation}
+	Эту систему можно решить методом прогонки (разд. \ref{section:run}).
+	
+	Посмотрим, во что трансформируется условие \ref{eq:condition}. Подставим туда коэффициенты из \ref{eq:abc}. Получим:
+	\begin{equation}
+		|\frac{p_{i + \half} + p_{i - \half}}{{\Delta x}^2} - q_i| \ge |\frac{p_{i + \half}}{{\Delta x}^2}| + |\frac{p_{i - \half}}{{\Delta x}^2}|
+	\end{equation}
+	Видно, что в общем случае достаточное условие завершения метода прогонки не выполнено. Однако, условие выполнится,
+	если функции $p$ и $q$ будут каждая в отдельности одного и того же знака, при этом вместе они будут разного знака.
+	Ещё одно достаточное условие~-- $q = 0$.
+
+\section{Метод прогонки}\label{section:run}
+	Метод прогонки решает системы вида $Ax=b$, где $A$~-- трёхдиагональная матрица $n \times n$. Общая идея алгоритма такова: на i-м шаге
+	можно выразить $x_i$ через $x_{i+1}$; это выражение можно подставить в уравнение с номером $i+1$; и т.п. 
+	На шаге $n$ получается уравнение с единственным неизвестным $x_n$. Его надо решить (найти $x_n$), затем, зная $x_n$, найти $x_{n-1}$ и т.п.
+
+	\subsection{Алгоритм}
+		Алгоритм состоит из двух стадий:
+		\begin{enumerate}
+			\item \mys{Прямой ход} прогонки состоит в вычислении \mys{прогоночных коэффициентов} 
+				  $\alpha_i$ ($1 \le i \le n$) и $\beta_i$ ($1 \le i \le n$). При $i = 1$ они вычисляются по формулам:
+				  \begin{equation}
+				      \begin{matrix}
+						  \alpha_1 = - \frac{c_1}{\gamma_1}, &
+						  \beta_1  = \frac{d_1}{\gamma_1}, &
+						  \gamma_1 = b_1,
+				  	  \end{matrix} 
+			  	  \end{equation}
+				  а при $i = 2, \dotsc, n-1$ по реккурентным формулам:
+				  \begin{equation}
+				      \begin{matrix}
+						  \alpha_i = - \frac{c_i}{\gamma_i}, &
+						  \beta_i  = \frac{d_i - a_i \beta_{i-1}}{\gamma_i}, &
+						  \gamma_i = b_i + a_i \alpha_{i-1}.
+				  	  \end{matrix}
+			  	  \end{equation}
+				  При $i = n$ прямой ход завершается вычислением:
+				  \begin{equation}
+				      \begin{matrix}
+						  \beta_n  = \frac{d_n - a_n \beta_{n-1}}{\gamma_n}, &
+						  \gamma_n = b_n + a_n \alpha_{n-1}.
+				  	  \end{matrix} 
+			  	  \end{equation}
+
+			  \item \mys{Обратный ход} метода прогонки даёт значения неизвестных. Сначала полагают $x_n = \beta_n$.
+				    Значения остальных неизвестных вычисляются по формуле $x_i = \alpha_i x_{i+1} + \beta_i$.
+		\end{enumerate}
+	
+	\subsection{Анализ}
+		Для реализации вычислений требуется примерно $8n$ операций.
+		Для того, чтобы метод прогонки завершился, необходимо, чтобы $\forall i, \gamma_i \not = 0$. 
+		Достаточным условием для этого является диагональное преобладание матрицы $A$, 
+		а именно 
+		\begin{equation}\label{eq:condition}
+			\vert b_i \vert \ge \vert a_i \vert + \vert c_i \vert.
+		\end{equation}
+
+\end{document}
